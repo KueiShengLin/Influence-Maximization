@@ -32,6 +32,25 @@ class IndependentCascade:
 
         return activated_nodes
 
+    def run_celf(self, s):
+        """
+        RanCas(S), run random cascade process
+        using CELF to speedup
+        :param s: ith activated nodes
+        :return: (i+1)th activated nodes
+        """
+        activated_nodes = copy.deepcopy(s)
+
+        for activated_node in activated_nodes:
+            for neighbor in self.g.neighbors(activated_node):
+                w = len([node for node in self.g.neighbors(neighbor) if node in activated_nodes])
+
+                if neighbor not in activated_nodes:
+                    if random.random() <= 1 - (1 - self.p) ** w:
+                        activated_nodes.append(neighbor)
+
+        return activated_nodes
+
 
 class LinearThreshold:
     def __init__(self, g, weight="uniform"):
